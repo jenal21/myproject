@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import RegisterPage from './pages/registerpage';
+import LoginPage from './Pages/loginpage';
+import Dashboard from '../src/Pages/dashboard';
+import History from '../src/Pages/history';
+import AppNavbar from './assets/components/navbar';
+import { useAuth } from './context/auth';
+import ForgotPasswordPage from "./Pages/forgotpasswordpage";
+import AdvisorBot from "./Pages/advisorbot";
+import MoodBoard from './Pages/moodboard';
 
-function App() {
-  const [count, setCount] = useState(0)
+
+const App = () => {
+  const { token } = useAuth();
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      {token && <AppNavbar />}
 
-export default App
+      <Routes>
+        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={token ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/history" element={token ? <History /> : <Navigate to="/login" />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        {/* <Route path="/advisor" element={token ? <AdvisorBot /> : <Navigate to="/login" />}  */}
+        <Route path="/advisor" element={<AdvisorBot />} />
+       <Route path="/moodboard" element={<MoodBoard />} />
+      
+
+
+      </Routes>
+    </>
+  );
+};
+
+export default App;
