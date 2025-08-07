@@ -7,8 +7,7 @@ const ExpenseForm = ({ onAdd }) => {
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!title || !amount) return;
 
     try {

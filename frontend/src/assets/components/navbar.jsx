@@ -14,7 +14,7 @@ const AppNavbar = () => {
     <Navbar bg="primary" variant="dark" expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/">
-          💰 Smart Expense Tracker
+          Smart Expense Tracker
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="main-navbar-nav" />
         <Navbar.Collapse id="main-navbar-nav">
@@ -23,7 +23,7 @@ const AppNavbar = () => {
               <>
                 <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
                 <Nav.Link as={Link} to="/history">My Expenses</Nav.Link>
-                <Nav.Link as={Link} to="/advisor">Expense Advisor</Nav.Link>
+                {/* <Nav.Link as={Link} to="/advisor">Expense Advisor</Nav.Link> */}
                 <Nav.Link as={Link} to="/moodboard">Mood Board</Nav.Link>
 
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>

@@ -4,52 +4,34 @@ import { Form, Button, Container, Alert } from "react-bootstrap";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/users/forgot-password", {
-        email,
-        newPassword,
-      });
+      const res = await axios.post("http://localhost:5000/api/users/forgot-password", { email });
       setMessage(res.data.message);
     } catch (err) {
-      setMessage(err.response?.data?.message || "Error resetting password");
+      setMessage(err.response?.data?.message || "Something went wrong");
     }
   };
 
   return (
     <Container className="mt-5" style={{ maxWidth: "500px" }}>
-      <h3 className="mb-4">Forgot Password</h3>
+      <h3>Forgot Password</h3>
       {message && <Alert variant="info">{message}</Alert>}
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Enter your registered email</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter your registered email"
+            placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>New Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter new password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-        </Form.Group>
-
-        <Button variant="primary" type="submit">
-          Reset Password
-        </Button>
+        <Button variant="primary" type="submit">Send Reset Link</Button>
       </Form>
     </Container>
   );

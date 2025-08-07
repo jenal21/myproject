@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import ExpenseForm from '../assets/components/expensesform';
 import ExpensesList from '../assets/components/expenseslist';
-import AdvisorBot from './advisorbot';
+// import AdvisorBot from './advisorbot';
 
 const Dashboard = () => {
   return (

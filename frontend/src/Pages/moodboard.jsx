@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Card } from 'react-bootstrap';
+import {useNavigate} from 'react-router-dom'
+import {useAuth} from '../context/auth'
 
 const moodOptions = [
   { label: '😊 Happy', value: 'happy' },
@@ -11,9 +13,19 @@ const moodOptions = [
 ];
 
 const MoodBoard = () => {
+
+  const { token } = useAuth();
+  const navigate = useNavigate();
+
   const [mood, setMood] = useState('');
   const [comment, setComment] = useState('');
   const [moodList, setMoodList] = useState([]);
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     const storedMoods = JSON.parse(localStorage.getItem('moods')) || [];
