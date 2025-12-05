@@ -32,7 +32,7 @@ function LoginPage() {
         {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
-            <Form.Label>Email address</Form.Label>
+            <Form.Label className='text-dark'>Email address</Form.Label>
             <Form.Control
               name="email"
               type="email"
@@ -44,7 +44,7 @@ function LoginPage() {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Password</Form.Label>
+            <Form.Label className='text-dark'>Password</Form.Label>
             <Form.Control
               name="password"
               type="password"

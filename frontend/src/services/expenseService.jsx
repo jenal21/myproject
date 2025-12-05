@@ -24,10 +24,8 @@ export const deleteExpense = (id, token) => {
   });
 };
 
-export const updatedExpense = (id, token) => {
-  return axios.delete(`http://localhost:5000/api/expenses/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+export const updateExpense = (id, data, token) => {
+  return axios.put(`/api/expenses/${id}`, data, {
+    headers: { Authorization: `Bearer ${token}` }
   });
 };

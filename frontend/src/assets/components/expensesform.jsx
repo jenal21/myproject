@@ -127,8 +127,8 @@ const ExpenseForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addExpense(formData, token); // add expense
-      navigate('/history'); // <-- REDIRECT HERE
+      await addExpense(formData, token); 
+      navigate('/history'); 
     } catch (err) {
       console.error('Error adding expense:', err);
     }
@@ -142,7 +142,7 @@ const ExpenseForm = () => {
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
-                <Form.Label>Title</Form.Label>
+                <Form.Label className='text-dark' >Title</Form.Label>
                 <Form.Control
                   type="text"
                   name="title"
@@ -155,7 +155,7 @@ const ExpenseForm = () => {
             </Col>
             <Col md={6}>
               <Form.Group className="mb-3">
-                <Form.Label>Amount</Form.Label>
+                <Form.Label className='text-dark'>Amount</Form.Label>
                 <Form.Control
                   type="number"
                   name="amount"
@@ -171,7 +171,7 @@ const ExpenseForm = () => {
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">
-                <Form.Label>Category</Form.Label>
+                <Form.Label className='text-dark'>Category</Form.Label>
                 <Form.Control
                   type="text"
                   name="category"
@@ -184,7 +184,7 @@ const ExpenseForm = () => {
             </Col>
             <Col md={6}>
               <Form.Group className="mb-3">
-                <Form.Label>Date</Form.Label>
+                <Form.Label className='text-dark'>Date</Form.Label>
                 <Form.Control
                   type="date"
                   name="date"

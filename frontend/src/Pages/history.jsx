@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getExpenses, deleteExpense } from '../services/expenseService';
+import { getExpenses, deleteExpense, updateExpense } from '../services/expenseService';
 import { Card, Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { useAuth } from '../context/auth';
 
@@ -9,6 +9,13 @@ const History = () => {
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
+
+  
+  const [editId, setEditId] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editAmount, setEditAmount] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editDate, setEditDate] = useState('');
 
   const currentYear = new Date().getFullYear();
   const minYear = 2000;
@@ -80,32 +87,61 @@ const History = () => {
 
   const groupedExpenses = groupByDate(filteredExpenses);
 
+  const startEdit = (expense) => {
+    setEditId(expense._id);
+    setEditTitle(expense.title);
+    setEditAmount(expense.amount);
+    setEditCategory(expense.category);
+    setEditDate(expense.date.split('T')[0]); 
+  };
+
+  
+  const cancelEdit = () => {
+    setEditId(null);
+    setEditTitle('');
+    setEditAmount('');
+    setEditCategory('');
+    setEditDate('');
+  };
+
+  const saveEdit = async (id) => {
+    try {
+      await updateExpense(
+        id,
+        {
+          title: editTitle,
+          amount: editAmount,
+          category: editCategory,
+          date: editDate,
+        },
+        token
+      );
+
+      
+      const updatedExpenses = expenses.map((exp) =>
+        exp._id === id
+          ? {
+              ...exp,
+              title: editTitle,
+              amount: editAmount,
+              category: editCategory,
+              date: editDate,
+            }
+          : exp
+      );
+      setExpenses(updatedExpenses);
+      applyFilters(updatedExpenses);
+      cancelEdit();
+    } catch (error) {
+      console.error('Error updating expense:', error);
+    }
+  };
+
   return (
     <Container className="mt-4">
       <h2 className="mb-4 text-center">Expense History</h2>
 
-      <Row className="mb-4">
-        <Col md={6}>
-          <Form.Select value={selectedMonth} onChange={handleMonthChange}>
-            <option value="">Filter by Month</option>
-            {[...Array(12)].map((_, i) => (
-              <option key={i + 1} value={i + 1}>  
-                {new Date(0, i).toLocaleString('default', { month: 'long' })}
-              </option>
-            ))}
-          </Form.Select>
-        </Col>
-        <Col md={6}>
-          <Form.Select value={selectedYear} onChange={handleYearChange}>
-            <option value="">Filter by Year</option>
-            {[...Array(maxYear - minYear + 1)].map((_, i) => (
-              <option key={minYear + i} value={minYear + i}>
-                {minYear + i}
-              </option>
-            ))}
-          </Form.Select>
-        </Col>
-      </Row>
+      
 
       {Object.keys(groupedExpenses).length === 0 ? (
         <p className="text-muted text-center">No expenses found.</p>
@@ -114,33 +150,90 @@ const History = () => {
           const total = items.reduce((acc, curr) => acc + Number(curr.amount), 0);
           return (
             <div key={date} className="mb-4">
-              <h5 className="text-primary">{date}</h5>
+              <h5 className="text-dark">{date}</h5>
               {items.map((expense) => (
                 <Card key={expense._id} className="mb-2 shadow-sm">
                   <Card.Body>
                     <Row>
                       <Col md={8}>
-                        <Card.Title>{expense.title}</Card.Title>
-                        <Card.Text>
-                          <strong>Amount:</strong> ₹{expense.amount} <br />
-                          <strong>Category:</strong> {expense.category}
-                        </Card.Text>
+                        {editId === expense._id ? (
+                          <>
+                            <Form.Control
+                              type="text"
+                              value={editTitle}
+                              onChange={(e) => setEditTitle(e.target.value)}
+                              className="mb-2"
+                            />
+                            <Form.Control
+                              type="number"
+                              value={editAmount}
+                              onChange={(e) => setEditAmount(e.target.value)}
+                              className="mb-2"
+                            />
+                            <Form.Control
+                              type="text"
+                              value={editCategory}
+                              onChange={(e) => setEditCategory(e.target.value)}
+                              className="mb-2"
+                              placeholder="Category"
+                            />
+                            <Form.Control
+                              type="date"
+                              value={editDate}
+                              onChange={(e) => setEditDate(e.target.value)}
+                              className="mb-2"
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <Card.Title>{expense.title}</Card.Title>
+                            <Card.Text className='text-dark'>
+                              <strong >Amount:</strong> ₹{expense.amount} <br />
+                              <strong>Category:</strong> {expense.category}
+                            </Card.Text>
+                          </>
+                        )}
                       </Col>
                       <Col md={4} className="d-flex align-items-center justify-content-end">
-                        
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleDelete(expense._id)}
-                        >
-                          Delete
-                        </Button>
+                        {editId === expense._id ? (
+                          <>
+                            <Button
+                              variant="success"
+                              size="sm"
+                              onClick={() => saveEdit(expense._id)}
+                              className="me-2"
+                            >
+                              Save
+                            </Button>
+                            <Button variant="secondary" size="sm" onClick={cancelEdit}>
+                              Cancel
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              onClick={() => startEdit(expense)}
+                              className="me-2"
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleDelete(expense._id)}
+                            >
+                              Delete
+                            </Button>
+                          </>
+                        )}
                       </Col>
                     </Row>
                   </Card.Body>
                 </Card>
               ))}
-              <h6 className="text-success mt-2">Total: ₹{total}</h6>
+              <h6 className="text-dark mt-2">Total: ₹{total}</h6>
               <hr />
             </div>
           );

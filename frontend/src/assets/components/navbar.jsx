@@ -11,7 +11,7 @@ const AppNavbar = () => {
   };
 
   return (
-    <Navbar bg="primary" variant="dark" expand="lg">
+    <Navbar bg="dark" variant="dark" expand="lg" style={{ backgroundColor: '#9c6fc8ff' }}>
       <Container>
         <Navbar.Brand as={Link} to="/">
           Smart Expense Tracker
@@ -23,7 +23,9 @@ const AppNavbar = () => {
               <>
                 <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
                 <Nav.Link as={Link} to="/history">My Expenses</Nav.Link>
-                {/* <Nav.Link as={Link} to="/advisor">Expense Advisor</Nav.Link> */}
+               
+                
+                <Nav.Link as={Link} to="/reports">Reports</Nav.Link>
                 <Nav.Link as={Link} to="/moodboard">Mood Board</Nav.Link>
 
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>

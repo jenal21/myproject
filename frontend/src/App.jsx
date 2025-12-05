@@ -7,8 +7,9 @@ import History from '../src/Pages/history';
 import AppNavbar from './assets/components/navbar';
 import { useAuth } from './context/auth';
 import ResetPassword from './Pages/resetpassword';
-import ForgotPasswordPage from './Pages/ForgotPasswordPage'
 import MoodBoard from './Pages/moodboard';
+import ForgotPassword from './Pages/forgotpassword';
+import Reports from './Pages/report';
 
 
 const App = () => {
@@ -24,9 +25,11 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={token ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/history" element={token ? <History /> : <Navigate to="/login" />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/moodboard" element={<MoodBoard />} />
+        <Route path="/reports" element={token ? <Reports /> : <Navigate to="/login" />} />
+
       
 
 

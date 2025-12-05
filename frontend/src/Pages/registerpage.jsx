@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Form, Button, Container, Card, Alert } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -18,10 +19,19 @@ const RegisterPage = () => {
 
     try {
       await axios.post("http://localhost:5000/api/users/register", formData);
-      alert("Registration successful! Please login.");
-      navigate("/login");
+
+      
+      toast.success("Registration successful! Please login.");
+      
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      const errorMsg = err.response?.data?.message || "Registration failed";
+      setError(errorMsg);
+
+      
+      toast.error(errorMsg);
     }
   };
 
