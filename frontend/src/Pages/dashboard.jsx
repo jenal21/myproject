@@ -4,7 +4,6 @@ import ExpenseForm from '../assets/components/expensesform';
 import { Bar } from 'react-chartjs-2';
 import axios from 'axios';
 
-// Chart.js register
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,20 +28,23 @@ ChartJS.register(
 const Dashboard = () => {
   const [expenses, setExpenses] = useState([]);
   const token = localStorage.getItem('token');
+ 
+    const API = `${import.meta.env.VITE_API_URL}/api/expenses`; 
 
-  // Backend se expenses fetch
-  useEffect(() => {
+    useEffect(() => {
     if (token) {
       axios
-        .get('http://localhost:5000/api/expenses/all', {
+        .get(`${API}/all`, {
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then(res => setExpenses(res.data))
-        .catch(err => console.error(err));
+        .then(res => {console.log("API RESPONSE:", res.data);
+          setExpenses(res.data.expenses || res.data || []);
+        })
+        .catch(err => console.error("Error fetching expenses:", err));
     }
-  }, [token]);
+  }, [token]);  
 
-  // Category wise total calculate
+  
   const categoryTotals = expenses.reduce((acc, expense) => {
     acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
     return acc;
@@ -117,16 +119,16 @@ const options = {
     <Container className="mt-4">
       <h2 className="mb-4 text-center">Dashboard</h2>
 
-      {/* Form Card */}
+      
       <Card className="p-4 shadow-sm border-0 mb-4" style={{ borderRadius: '12px' }}>
         <ExpenseForm />
       </Card>
 
-      {/* Chart Card */}
+      
       <Card className="p-4 shadow-sm border-0" style={{ borderRadius: '12px', minHeight: '350px' }}>
         <div style={{ height: '300px' }}>
           <Bar
-            key={JSON.stringify(categoryTotals)} // force re-render to avoid "canvas in use" error
+            key={JSON.stringify(categoryTotals)} 
             data={data}
             options={options}
           />
