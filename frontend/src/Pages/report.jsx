@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Container, Form, Row, Col, Button, Table } from "react-bootstrap";
 import axios from "axios";
 
+const API = import.meta.env.VITE_API_URL;
+
 const Reports = () => {
   const [filters, setFilters] = useState({
     startDate: "",
@@ -25,9 +27,10 @@ const Reports = () => {
       const token = localStorage.getItem("token");
       const config = {
         headers: { Authorization: `Bearer ${token}` },
-        params: filters, // pass filters as query params
+        params: filters, 
       };
-      const res = await axios.get("/api/expenses/report", config);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/expenses/report`,config);
+
       setExpenses(res.data.expenses || []);
     } catch (err) {
       setError(err.response?.data?.message || "Error fetching data");
